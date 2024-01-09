@@ -1,6 +1,13 @@
-import Image from 'next/image'
+import Image from "next/image";
+import Link from "next/link";
 
-export default function Home() {
+export default function Home({
+  searchParams = {},
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const count = parseIntParam(searchParams.count) ?? 0;
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
@@ -15,7 +22,7 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            By{' '}
+            By{" "}
             <Image
               src="/vercel.svg"
               alt="Vercel Logo"
@@ -39,6 +46,21 @@ export default function Home() {
         />
       </div>
 
+      <div className="flex flex-col gap-3 items-center">
+        <p>Count: {count}</p>
+
+        <Link href={`/?count=${count + 1}`} className="hover:text-blue-500">
+          With Prefetch
+        </Link>
+        <Link
+          href={`/?count=${count + 1}`}
+          prefetch={false}
+          className="hover:text-blue-500"
+        >
+          Without Prefetch
+        </Link>
+      </div>
+
       <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
         <a
           href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
@@ -47,7 +69,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
+            Docs{" "}
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
             </span>
@@ -64,7 +86,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
+            Learn{" "}
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
             </span>
@@ -81,7 +103,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
+            Templates{" "}
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
             </span>
@@ -98,7 +120,7 @@ export default function Home() {
           rel="noopener noreferrer"
         >
           <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
+            Deploy{" "}
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
               -&gt;
             </span>
@@ -109,5 +131,13 @@ export default function Home() {
         </a>
       </div>
     </main>
-  )
+  );
 }
+
+const parseIntParam = (
+  x: string | string[] | undefined
+): number | undefined => {
+  if (!x || typeof x !== "string") return undefined;
+  const parsed = parseInt(x);
+  return !isNaN(parsed) ? parsed : undefined;
+};
